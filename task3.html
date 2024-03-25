@@ -21,10 +21,10 @@
 
     <div class="form-group">
         <label for="depositAmount">Сумма вклада:</label>
-        <input type="number" id="depositAmount" min="1">
+        <input type="number" id="depositAmount" min="1" oninput="validateInput()" required>
     </div>
 
-    <button onclick="calculate()">Рассчитать</button>
+    <button id="calculateButton" onclick="calculate()" disabled>Рассчитать</button>
 
     <div class="result" id="result"></div>
 
@@ -36,6 +36,8 @@
 
         const depositTypeSelect = document.getElementById('depositType');
         const depositTermSelect = document.getElementById('depositTerm');
+        const depositAmount = document.getElementById('depositAmount');
+        const calculateButton = document.getElementById('calculateButton');
 
         depositTypeSelect.addEventListener('change', function() {
             const selectedType = this.value;
@@ -52,8 +54,16 @@
 
         depositTypeSelect.dispatchEvent(new Event('change'));
 
+        function validateInput() {
+            if (depositAmount.value === "" || isNaN(depositAmount.value)) {
+                calculateButton.disabled = true;
+            } else {
+                calculateButton.disabled = false;
+            }
+        }
+
         function calculate() {
-            const amount = document.getElementById('depositAmount').value;
+            const amount = depositAmount.value;
             const rate = depositTermSelect.value;
             const result = amount * (1 + rate / 100);
             const depositType = depositTypeSelect.options[depositTypeSelect.selectedIndex].text;
